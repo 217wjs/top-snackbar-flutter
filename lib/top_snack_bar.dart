@@ -64,13 +64,17 @@ void showTopSnackBar(
   DismissType dismissType = DismissType.onTap,
   List<DismissDirection> dismissDirection = const [DismissDirection.up],
 }) {
-  late OverlayEntry _overlayEntry;
+  OverlayEntry? _overlayEntry;
   _overlayEntry = OverlayEntry(
     builder: (_) {
       return _TopSnackBar(
         onDismissed: () {
-          _overlayEntry.remove();
-          _previousEntry = null;
+          try {
+            _overlayEntry?.remove();
+            _previousEntry = null;
+          } catch (e) {
+            print("_overlay is null");
+          }
         },
         animationDuration: animationDuration,
         reverseAnimationDuration: reverseAnimationDuration,
@@ -93,8 +97,10 @@ void showTopSnackBar(
     _previousEntry?.remove();
   }
 
-  overlayState.insert(_overlayEntry);
-  _previousEntry = _overlayEntry;
+  if (_overlayEntry != null) {
+    overlayState.insert(_overlayEntry);
+    _previousEntry = _overlayEntry;
+  }
 }
 
 /// Widget that controls all animations
